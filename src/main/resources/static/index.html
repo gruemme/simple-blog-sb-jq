@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Blog</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <script src="js/bootstrap.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                // Set title
+                $.get('/title', function (data) {
+                    $('#title').html("<h1>"+data+"<h1>");
+                });
+                // GET call to read all images
+                $.ajax({
+                    type: 'GET',
+                    url: '/entries',
+                    success: function (result) {
+                        // Build a list with all images
+                        var resultList = "<ul>";
+                        $.each(result, function (key, value) {
+                            resultList += "<li><a href=\"/show.html?id=" + value.id + "\">" + value.title + "</a></li>";
+                        });
+                        resultList += "</ul>";
+                        // Replace content of <div> with id=gallery with the list
+                        $('#gallery').html(resultList);
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div id="title" class="row">
+                <h1>My Blog</h1>
+            </div>        
+        </div>
+        <div class="container" id="gallery">No images found</div>
+        <div class="container">
+            <div class="row">
+                <input type="button" onclick="location.href = '/create.html';" value="Create new entry" />            
+            </div>
+        </div>
+    </body>
+</html>

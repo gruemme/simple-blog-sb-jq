@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Blog</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <script src="js/bootstrap.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // Set title
+      $.get('/title', function (data) {
+        $('#title').html("<h1>" + data + "<h1>");
+      });
+      $('#button-id').click(function () {
+        // newData is a JSON file representation of the Java Entry object
+        var newData = new Object();
+        newData.id = null;
+        newData.title = $('#title-id').val();
+        newData.text = $('#text-id').val();
+        $.ajax({
+          url: '/entries',
+          type: 'PUT',
+          contentType: 'application/json',
+          data: JSON.stringify(newData),
+          success: function (data) {
+            window.location.replace('/show.html?id=' + data);
+          }
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="container">
+  <div id="title" class="row">
+    <h1>My Blog</h1>
+  </div>
+</div>
+<div class="container">
+  <h2>Create a new entry</h2>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <label for="title-id">Title</label>
+    </div>
+    <div class="col-sm">
+      <input id="title-id" type="text"/>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <label for="text-id">Text</label>
+    </div>
+    <div class="col-sm">
+      <textarea id="text-id"></textarea>
+    </div>
+  </div>
+
+  <div class="row ">
+    <div class="col-sm">
+      <hr/>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-sm"></div>
+    <div class="col-sm ">
+      <input id="button-id" type="button" value="Create"/>
+    </div>
+  </div>
+</div>
+</body>
+</html>

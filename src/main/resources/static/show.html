@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Blog</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <script src="js/bootstrap.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                // Set title
+                $.get('/title', function (data) {
+                    $('#title').html("<h1>"+data+"<h1>");
+                });
+                // Get ID parameter from URL
+                var searchParams = new URLSearchParams(window.location.search);
+                if (searchParams.has('id')) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/entry/" + searchParams.get('id'),
+                        success: function (result) {
+                            // Found entry display it on the page
+                            var divEntry = "<div class=\"row\"><h3>ID " + result.id + ": " + result.title + "</h3></div>";
+                            divEntry += "<div class=\"row\">" + result.text + "</div>";
+                            $("#gallery").html(divEntry);
+                        }
+                    });
+                    $('#deleteButton').click(function () {
+                        // User should confirm the deletion
+                        var check = confirm('Do you really want to delete this entry with ID ' + searchParams.get('id') + '?');
+                        if (check === true) {
+                            $.ajax({
+                                type: "DELETE",
+                                url: "/entry/" + searchParams.get('id'),
+                                success: function (result) {
+                                    // Redirect to index.html
+                                    window.location.replace('/index.html');
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $("#gallery").html("No ID found");
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div id="title" class="row">
+                <h1>My Blog</h1>
+            </div>
+        </div>
+        <div class="container" id="gallery">No Data available</div>
+        <div class="container">
+            <div class="row ">
+                <div class="col-sm"><hr /></div>
+            </div>
+            <div class="row ">
+                <div class="col-sm">
+                    <input type="button" onclick="location.href = '/index.html';" value="Go back" />
+                </div>
+                <div class="col-sm ">
+                    <input id="deleteButton" type="button" value="Delete" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
